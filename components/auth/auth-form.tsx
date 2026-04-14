@@ -37,13 +37,13 @@ export function AuthForm() {
     <div className="w-full max-w-md">
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 rounded-2xl bg-white p-10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+        className="space-y-8 rounded-[8px] bg-white p-10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
       >
         <div className="space-y-2 text-center">
-          <h1 className="text-[48px] font-normal leading-[1.1] tracking-[-0.96px] text-black">
+          <h1 className="text-[48px] font-[400] leading-[1.1] tracking-[-0.96px] text-black sm:text-[64px]">
             {t("title")}
           </h1>
-          <p className="text-[18px] font-light leading-[1.45] tracking-[-0.26px] text-black/60">
+          <p className="text-[18px] font-[320] leading-[1.45] tracking-[-0.26px] text-black/60">
             {t("subtitle")}
           </p>
         </div>
@@ -60,7 +60,7 @@ export function AuthForm() {
               }}
               placeholder={t(`word${(i + 1) as 1 | 2 | 3}`)}
               required
-              className="h-14 flex-1 rounded-lg border-black/10 bg-white text-center text-lg text-black placeholder:text-black/40 focus-visible:ring-black focus-visible:ring-2"
+              className="h-14 flex-1 rounded-[8px] border-black/10 bg-white text-center text-lg font-[330] tracking-[-0.14px] text-black placeholder:font-[330] placeholder:text-black/40 focus-visible:border-black/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-0"
             />
           ))}
         </div>
@@ -68,13 +68,15 @@ export function AuthForm() {
         <Button
           type="submit"
           disabled={loading || words.some((w) => !w.trim())}
-          className="h-12 w-full rounded-[50px] bg-black text-base font-normal text-white hover:bg-black/90 disabled:opacity-50"
+          className="h-12 w-full rounded-[50px] bg-black px-[18px] py-[8px] text-base font-[330] tracking-[-0.14px] text-white hover:bg-black/90 disabled:opacity-50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-0"
         >
           {loading ? t("opening") : t("enter")}
         </Button>
 
         {error && (
-          <p className="text-center text-sm text-black/80">{error}</p>
+          <p className="text-center text-sm font-[330] tracking-[-0.14px] text-black/80">
+            {error}
+          </p>
         )}
       </form>
     </div>

@@ -16,23 +16,23 @@ export function RemoteCursors({ cursors }: { cursors: PresenceCursor[] }) {
           }}
         >
           <svg
-            width="26"
-            height="26"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 3L10.07 19.97L12.58 12.58L19.97 10.07L3 3Z"
-              fill={cursor.avatar_color || "#c45d3e"}
+              fill={cursor.avatar_color || "#000000"}
               stroke="white"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinejoin="round"
             />
           </svg>
           <span
-            className="absolute left-5 top-5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-medium text-white shadow-sm"
-            style={{ backgroundColor: cursor.avatar_color || "#c45d3e" }}
+            className="absolute left-4 top-4 whitespace-nowrap rounded-[50px] px-2 py-0.5 text-[11px] font-normal text-white shadow-sm"
+            style={{ backgroundColor: cursor.avatar_color || "#000000" }}
           >
             {cursor.display_name}
           </span>

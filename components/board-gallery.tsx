@@ -10,6 +10,7 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Plus } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export function BoardGallery({
   boards: initialBoards,
@@ -56,14 +57,18 @@ export function BoardGallery({
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
+  const hasGradient = (cover?: string | null) => Boolean(cover);
+
   return (
     <div className="min-h-full bg-white">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-black/5 bg-white/80 px-6 py-4 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 flex items-center justify-between border-b border-black/5 bg-white/95 px-6 py-4 backdrop-blur-sm">
         <div>
-          <h1 className="text-[26px] font-medium leading-[1.35] tracking-[-0.26px] text-black">
+          <h1 className="text-[26px] font-[540] leading-[1.35] tracking-[-0.26px] text-black">
             {t("moodBoard")}
           </h1>
-          <p className="text-sm text-black/60">{t("sharedSpace")}</p>
+          <p className="text-[18px] font-[320] leading-[1.45] tracking-[-0.26px] text-black/60">
+            {t("sharedSpace")}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
@@ -93,36 +98,62 @@ export function BoardGallery({
         </form>
 
         {boards.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 py-24 text-center">
-            <p className="text-[20px] font-normal leading-[1.4] tracking-[-0.14px] text-black">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-black/10 py-24 text-center">
+            <p className="text-[20px] font-[330] leading-[1.4] tracking-[-0.14px] text-black">
               {t("noEntriesYet")}
             </p>
-            <p className="text-sm text-black/60">{t("createFirst")}</p>
+            <p className="text-[16px] font-[320] leading-[1.45] tracking-[-0.14px] text-black/60">
+              {t("createFirst")}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {boards.map((board) => (
-              <button
-                key={board.id}
-                onClick={() => router.push(`/board/${board.id}`)}
-                className="group relative flex aspect-[4/3] flex-col items-start justify-end overflow-hidden rounded-xl border border-black/5 bg-white p-6 text-left transition-shadow hover:shadow-lg"
-                style={{ background: board.cover_color || "#ffffff" }}
-              >
-                <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
-                <div className="relative z-10">
-                  <h3 className="text-lg font-medium text-black">
-                    {board.title}
-                  </h3>
-                  <p className="text-xs text-black/60">
-                    {new Date(board.created_at).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-              </button>
-            ))}
+            {boards.map((board) => {
+              const gradient = hasGradient(board.cover_color);
+              return (
+                <button
+                  key={board.id}
+                  onClick={() => router.push(`/board/${board.id}`)}
+                  className={cn(
+                    "group relative flex aspect-[4/3] flex-col items-start justify-end overflow-hidden rounded-lg p-6 text-left transition-all duration-200",
+                    "shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:-translate-y-0.5",
+                    !gradient && "bg-white"
+                  )}
+                  style={{
+                    background: board.cover_color || undefined,
+                  }}
+                >
+                  {gradient && (
+                    <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                  )}
+                  <div className="relative z-10 w-full">
+                    <h3
+                      className={cn(
+                        "text-[20px] font-[540] leading-[1.35] tracking-[-0.26px]",
+                        gradient ? "text-white" : "text-black"
+                      )}
+                    >
+                      {board.title}
+                    </h3>
+                    <p
+                      className={cn(
+                        "mt-1 text-[14px] font-[330] leading-[1.4] tracking-[-0.14px]",
+                        gradient ? "text-white/80" : "text-black/60"
+                      )}
+                    >
+                      {new Date(board.created_at).toLocaleDateString(
+                        undefined,
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
       </main>

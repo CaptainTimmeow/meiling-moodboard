@@ -114,7 +114,7 @@ export function CanvasStage({
     <div
       ref={containerRef}
       data-stage
-      className="relative h-full w-full cursor-grab active:cursor-grabbing overflow-hidden"
+      className="relative h-full w-full cursor-grab overflow-hidden active:cursor-grabbing"
       style={{ background: board.cover_color || "#ffffff" }}
       onWheel={onWheel}
       onMouseDown={onMouseDown}
@@ -145,18 +145,22 @@ export function CanvasStage({
         </div>
       </div>
 
-      {/* Zoom controls */}
-      <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full border border-black/10 bg-white/90 px-3 py-1.5 text-sm text-black shadow-sm backdrop-blur-sm">
+      {/* Zoom controls — clean white pill strip */}
+      <div className="absolute bottom-4 right-4 flex items-center gap-1 rounded-[50px] border border-black/10 bg-white/95 px-2 py-1.5 text-sm text-black shadow-sm backdrop-blur-sm">
         <button
           onClick={() => setStage((s) => ({ ...s, scale: Math.max(s.scale * 0.9, 0.2) }))}
-          className="px-2 hover:text-black/60"
+          className="flex h-7 w-7 items-center justify-center rounded-[50%] text-black hover:bg-black/[0.08]"
+          aria-label="Zoom out"
         >
-          -
+          −
         </button>
-        <span className="min-w-[3ch] text-center">{Math.round(stage.scale * 100)}%</span>
+        <span className="min-w-[4ch] select-none text-center text-sm font-normal">
+          {Math.round(stage.scale * 100)}%
+        </span>
         <button
           onClick={() => setStage((s) => ({ ...s, scale: Math.min(s.scale * 1.1, 3) }))}
-          className="px-2 hover:text-black/60"
+          className="flex h-7 w-7 items-center justify-center rounded-[50%] text-black hover:bg-black/[0.08]"
+          aria-label="Zoom in"
         >
           +
         </button>

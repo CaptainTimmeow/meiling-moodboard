@@ -18,7 +18,7 @@ export function SignOutButton() {
     <Button
       variant="outline"
       onClick={signOut}
-      className="h-9 rounded-[50px] border-black/10 px-5 text-sm text-black hover:bg-black/5"
+      className="h-9 rounded-[50px] border-black/10 bg-white px-5 text-sm font-[330] tracking-[-0.14px] text-black hover:bg-black/5 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-0"
     >
       {t("leave")}
     </Button>

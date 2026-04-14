@@ -6,7 +6,7 @@ export default function LoginPage() {
     <div className="relative flex min-h-full flex-1 flex-col items-center justify-center px-6 py-12">
       {/* Vibrant hero gradient background */}
       <div className="absolute inset-0 hero-gradient" />
-      
+
       {/* Language switcher */}
       <div className="absolute right-6 top-6 z-10">
         <LanguageSwitcher />

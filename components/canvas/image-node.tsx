@@ -90,7 +90,7 @@ export function ImageNode({
       />
       {isSelected && (
         <div
-          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize"
           onMouseDown={startResize}
           style={{
             background: "#000",

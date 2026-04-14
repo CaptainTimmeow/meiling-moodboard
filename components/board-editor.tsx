@@ -138,49 +138,57 @@ export function BoardEditor({
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-white">
-      {/* Header */}
-      <header className="flex items-center gap-3 border-b border-black/5 px-4 py-3">
+      {/* Header — clean white strip with black text, pill/circular buttons only */}
+      <header className="flex items-center gap-3 border-b border-black/5 bg-white px-4 py-3">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push("/")}
-          className="rounded-[50%] hover:bg-black/5"
+          aria-label={t("back")}
+          className="h-10 w-10 rounded-[50%] text-black hover:bg-black/[0.08]"
         >
-          <ArrowLeft className="h-5 w-5 text-black" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
+
         <Input
           value={boardTitle}
           onChange={(e) => updateTitle(e.target.value)}
           className="h-9 w-auto min-w-[10rem] border-none bg-transparent text-[20px] font-normal text-black focus-visible:ring-0"
         />
+
         <div className="flex-1" />
+
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
+
           <Button
             variant="outline"
             size="sm"
             onClick={addText}
-            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
+            disabled={uploading}
+            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
           >
             <Type className="h-4 w-4" />
             <span className="hidden sm:inline">{t("text")}</span>
           </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
+            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
           >
             <ImageIcon className="h-4 w-4" />
             <span className="hidden sm:inline">{t("image")}</span>
           </Button>
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => audioInputRef.current?.click()}
             disabled={uploading}
-            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
+            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
           >
             <Music className="h-4 w-4" />
             <span className="hidden sm:inline">{t("audio")}</span>
@@ -191,7 +199,7 @@ export function BoardEditor({
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
+                className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
               >
                 <Palette className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("background")}</span>
@@ -206,7 +214,11 @@ export function BoardEditor({
                 { value: "linear-gradient(135deg, #e91e63 0%, #ff9800 100%)", label: t("gradient") },
                 { value: "#000000", label: t("dark") },
               ].map((c, idx) => (
-                <DropdownMenuItem key={idx} onClick={() => updateCover(c.value)} className="gap-2 rounded-lg text-black focus:bg-black/5 focus:text-black">
+                <DropdownMenuItem
+                  key={idx}
+                  onClick={() => updateCover(c.value)}
+                  className="gap-2 rounded-lg text-black focus:bg-black/5 focus:text-black"
+                >
                   <span
                     className="inline-block h-4 w-4 rounded-full border border-black/10"
                     style={{ background: c.value }}
@@ -222,7 +234,7 @@ export function BoardEditor({
               variant="outline"
               size="sm"
               onClick={() => deleteElement(selectedId)}
-              className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
+              className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
             >
               <Trash2 className="h-4 w-4" />
               <span className="hidden sm:inline">{t("delete")}</span>

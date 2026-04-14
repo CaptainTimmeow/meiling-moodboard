@@ -100,9 +100,9 @@ export function AudioNode({
       <div className="flex h-full w-full items-center gap-3 rounded-xl border border-black/10 bg-white px-3 shadow-sm">
         <button
           onClick={togglePlay}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white hover:bg-black/90"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[50%] bg-black text-white hover:bg-black/90"
         >
-          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
         </button>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-black">
@@ -124,7 +124,7 @@ export function AudioNode({
 
       {isSelected && (
         <div
-          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize"
           onMouseDown={startResize}
           style={{
             background: "#000",

@@ -25,12 +25,19 @@ export function TextNode({
 
   const style = element.style || {};
 
-  // Sync content from props when NOT editing
+  // Sync content from props only when NOT actively editing.
+  // We use a ref for isEditing so the effect only re-runs when element.content
+  // actually changes (e.g. from realtime or initial mount), not on every
+  // isEditing toggle. This prevents React from clobbering the DOM with stale
+  // props right after the user finishes typing.
+  const isEditingRef = useRef(isEditing);
+  isEditingRef.current = isEditing;
+
   useEffect(() => {
-    if (!isEditing && nodeRef.current) {
+    if (!isEditingRef.current && nodeRef.current) {
       nodeRef.current.innerText = element.content || "";
     }
-  }, [element.content, isEditing]);
+  }, [element.content]);
 
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
@@ -83,10 +90,11 @@ export function TextNode({
     }
   }
 
-  function handleDoubleClick() {
+  function handleDoubleClick(e: React.MouseEvent) {
+    e.stopPropagation();
     setIsEditing(true);
     // Select all text for easy editing
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const range = document.createRange();
       const sel = window.getSelection();
       if (nodeRef.current && sel) {
@@ -94,7 +102,7 @@ export function TextNode({
         sel.removeAllRanges();
         sel.addRange(range);
       }
-    }, 0);
+    });
   }
 
   return (
@@ -136,7 +144,7 @@ export function TextNode({
 
       {isSelected && !isEditing && (
         <div
-          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize"
           onMouseDown={startResize}
           style={{
             background: "#000",
