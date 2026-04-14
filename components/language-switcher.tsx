@@ -8,36 +8,34 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Globe } from "lucide-react";
 
 export function LanguageSwitcher() {
-  const { locale, setLocale, t } = useI18n();
+  const { locale, setLocale } = useI18n();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="gap-2 rounded-full text-[#8a7f74] hover:bg-[#f3ebe4] hover:text-[#5c534b]"
+          className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-sm text-black hover:bg-black/5"
         >
-          <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{locale === "zh" ? "中文" : "English"}</span>
+          {locale === "zh" ? "中文" : "English"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="rounded-2xl border-[rgba(61,58,54,0.08)] bg-white"
+        className="rounded-xl border-black/10 bg-white"
       >
         <DropdownMenuItem
           onClick={() => setLocale("zh")}
-          className="rounded-xl text-[#3d3a36] focus:bg-[#f3ebe4] focus:text-[#3d3a36]"
+          className="rounded-lg text-black focus:bg-black/5 focus:text-black"
         >
           中文
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setLocale("en")}
-          className="rounded-xl text-[#3d3a36] focus:bg-[#f3ebe4] focus:text-[#3d3a36]"
+          className="rounded-lg text-black focus:bg-black/5 focus:text-black"
         >
           English
         </DropdownMenuItem>

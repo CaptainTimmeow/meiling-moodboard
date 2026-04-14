@@ -18,7 +18,7 @@ export function SignOutButton() {
     <Button
       variant="outline"
       onClick={signOut}
-      className="h-10 rounded-full border-[rgba(61,58,54,0.08)] px-5 text-sm text-[#5c534b] hover:bg-[#f3ebe4] hover:text-[#3d3a36]"
+      className="h-9 rounded-[50px] border-black/10 px-5 text-sm text-black hover:bg-black/5"
     >
       {t("leave")}
     </Button>

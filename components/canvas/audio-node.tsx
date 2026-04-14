@@ -97,22 +97,22 @@ export function AudioNode({
         onSelect();
       }}
     >
-      <div className="flex h-full w-full items-center gap-4 rounded-2xl border border-[rgba(61,58,54,0.08)] bg-white px-4 shadow-sm">
+      <div className="flex h-full w-full items-center gap-3 rounded-xl border border-black/10 bg-white px-3 shadow-sm">
         <button
           onClick={togglePlay}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#c45d3e] text-white transition-transform hover:scale-105 hover:bg-[#a84d32]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white hover:bg-black/90"
         >
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
         </button>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-[#3d3a36]">
+          <p className="truncate text-sm font-medium text-black">
             {element.content || t("untitledAudio")}
           </p>
-          <div className="mt-1.5 h-1.5 w-full rounded-full bg-[#f3ebe4]">
-            <div className="h-1.5 w-1/3 rounded-full bg-[#c45d3e]" />
+          <div className="mt-1 h-1 w-full rounded-full bg-black/10">
+            <div className="h-1 w-1/3 rounded-full bg-black" />
           </div>
         </div>
-        <Music className="h-5 w-5 shrink-0 text-[#8a7f74]" />
+        <Music className="h-5 w-5 shrink-0 text-black/40" />
       </div>
 
       <audio
@@ -124,14 +124,12 @@ export function AudioNode({
 
       {isSelected && (
         <div
-          className="absolute bottom-0 right-0 h-5 w-5 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
           onMouseDown={startResize}
           style={{
-            background: "#c45d3e",
-            transform: "translate(40%, 40%)",
+            background: "#000",
+            transform: "translate(50%, 50%)",
             borderRadius: "50%",
-            border: "2px solid white",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
           }}
         />
       )}

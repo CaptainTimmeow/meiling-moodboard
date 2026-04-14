@@ -73,7 +73,7 @@ export function BoardEditor({
       rotation: 0,
       style: {
         fontSize: 24,
-        color: "#3d3a36",
+        color: "#000000",
         opacity: 1,
         fontWeight: 400,
       },
@@ -137,24 +137,21 @@ export function BoardEditor({
   }
 
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-[#faf8f5]">
-      {/* Grain texture */}
-      <div className="absolute inset-0 paper-grain pointer-events-none" />
-
+    <div className="flex h-screen flex-col overflow-hidden bg-white">
       {/* Header */}
-      <header className="relative z-10 flex items-center gap-3 border-b border-[rgba(61,58,54,0.06)] bg-[#faf8f5]/90 px-5 py-3 backdrop-blur-md">
+      <header className="flex items-center gap-3 border-b border-black/5 px-4 py-3">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push("/")}
-          className="rounded-full hover:bg-[#f3ebe4]"
+          className="rounded-[50%] hover:bg-black/5"
         >
-          <ArrowLeft className="h-5 w-5 text-[#5c534b]" />
+          <ArrowLeft className="h-5 w-5 text-black" />
         </Button>
         <Input
           value={boardTitle}
           onChange={(e) => updateTitle(e.target.value)}
-          className="h-10 w-auto min-w-[10rem] border-none bg-transparent text-xl font-medium text-[#3d3a36] focus-visible:ring-0"
+          className="h-9 w-auto min-w-[10rem] border-none bg-transparent text-[20px] font-normal text-black focus-visible:ring-0"
         />
         <div className="flex-1" />
         <div className="flex items-center gap-2">
@@ -163,7 +160,7 @@ export function BoardEditor({
             variant="outline"
             size="sm"
             onClick={addText}
-            className="gap-2 rounded-full border-[rgba(61,58,54,0.08)] bg-white text-[#5c534b] hover:bg-[#f3ebe4] hover:text-[#3d3a36]"
+            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
           >
             <Type className="h-4 w-4" />
             <span className="hidden sm:inline">{t("text")}</span>
@@ -173,7 +170,7 @@ export function BoardEditor({
             size="sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="gap-2 rounded-full border-[rgba(61,58,54,0.08)] bg-white text-[#5c534b] hover:bg-[#f3ebe4] hover:text-[#3d3a36]"
+            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
           >
             <ImageIcon className="h-4 w-4" />
             <span className="hidden sm:inline">{t("image")}</span>
@@ -183,7 +180,7 @@ export function BoardEditor({
             size="sm"
             onClick={() => audioInputRef.current?.click()}
             disabled={uploading}
-            className="gap-2 rounded-full border-[rgba(61,58,54,0.08)] bg-white text-[#5c534b] hover:bg-[#f3ebe4] hover:text-[#3d3a36]"
+            className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
           >
             <Music className="h-4 w-4" />
             <span className="hidden sm:inline">{t("audio")}</span>
@@ -194,31 +191,24 @@ export function BoardEditor({
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 rounded-full border-[rgba(61,58,54,0.08)] bg-white text-[#5c534b] hover:bg-[#f3ebe4] hover:text-[#3d3a36]"
+                className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
               >
                 <Palette className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("background")}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="rounded-2xl border-[rgba(61,58,54,0.08)] bg-white"
-            >
+            <DropdownMenuContent align="end" className="rounded-xl border-black/10 bg-white">
               {[
                 { value: "#ffffff", label: t("white") },
-                { value: "linear-gradient(135deg, #f9e4c9 0%, #f5d6c6 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #d4e8d4 0%, #e8f3e8 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #e8d5e8 0%, #f3e8f3 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #c9e4e8 0%, #d4e8e8 100%)", label: t("gradient") },
-                { value: "#3d3a36", label: t("dark") },
+                { value: "linear-gradient(135deg, #a8e063 0%, #f4d03f 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #f4d03f 0%, #9b59b6 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #9b59b6 0%, #e91e63 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #e91e63 0%, #ff9800 100%)", label: t("gradient") },
+                { value: "#000000", label: t("dark") },
               ].map((c, idx) => (
-                <DropdownMenuItem
-                  key={idx}
-                  onClick={() => updateCover(c.value)}
-                  className="gap-3 rounded-xl text-[#3d3a36] focus:bg-[#f3ebe4] focus:text-[#3d3a36]"
-                >
+                <DropdownMenuItem key={idx} onClick={() => updateCover(c.value)} className="gap-2 rounded-lg text-black focus:bg-black/5 focus:text-black">
                   <span
-                    className="inline-block h-5 w-5 rounded-full border border-[rgba(61,58,54,0.12)]"
+                    className="inline-block h-4 w-4 rounded-full border border-black/10"
                     style={{ background: c.value }}
                   />
                   <span>{c.label}</span>
@@ -232,7 +222,7 @@ export function BoardEditor({
               variant="outline"
               size="sm"
               onClick={() => deleteElement(selectedId)}
-              className="gap-2 rounded-full border-[#c45d3e]/20 bg-white text-[#c45d3e] hover:bg-[#c45d3e]/10"
+              className="gap-2 rounded-[50px] border-black/10 text-black hover:bg-black/5"
             >
               <Trash2 className="h-4 w-4" />
               <span className="hidden sm:inline">{t("delete")}</span>

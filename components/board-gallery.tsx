@@ -46,29 +46,24 @@ export function BoardGallery({
 
   function generateSoftColor() {
     const colors = [
-      "linear-gradient(135deg, #f9e4c9 0%, #f5d6c6 100%)",
-      "linear-gradient(135deg, #d4e8d4 0%, #e8f3e8 100%)",
-      "linear-gradient(135deg, #e8d5e8 0%, #f3e8f3 100%)",
-      "linear-gradient(135deg, #c9e4e8 0%, #d4e8e8 100%)",
-      "linear-gradient(135deg, #f5d6c6 0%, #f9e4c9 100%)",
-      "linear-gradient(135deg, #e8e8d4 0%, #f3f3e8 100%)",
-      "linear-gradient(135deg, #d6d6f5 0%, #e8e8f9 100%)",
-      "linear-gradient(135deg, #f5e8d6 0%, #f9f3e8 100%)",
+      "linear-gradient(135deg, #a8e063 0%, #f4d03f 100%)",
+      "linear-gradient(135deg, #f4d03f 0%, #9b59b6 100%)",
+      "linear-gradient(135deg, #9b59b6 0%, #e91e63 100%)",
+      "linear-gradient(135deg, #e91e63 0%, #ff9800 100%)",
+      "linear-gradient(135deg, #ff9800 0%, #a8e063 100%)",
+      "linear-gradient(135deg, #a8e063 0%, #e91e63 100%)",
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
   return (
-    <div className="relative min-h-full bg-[#faf8f5]">
-      {/* Grain texture */}
-      <div className="absolute inset-0 paper-grain" />
-
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-[rgba(61,58,54,0.06)] bg-[#faf8f5]/85 px-6 py-4 backdrop-blur-md">
+    <div className="min-h-full bg-white">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-black/5 bg-white/80 px-6 py-4 backdrop-blur-sm">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-[#3d3a36]">
+          <h1 className="text-[26px] font-medium leading-[1.35] tracking-[-0.26px] text-black">
             {t("moodBoard")}
           </h1>
-          <p className="text-sm text-[#8a7f74]">{t("sharedSpace")}</p>
+          <p className="text-sm text-black/60">{t("sharedSpace")}</p>
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
@@ -76,55 +71,54 @@ export function BoardGallery({
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+      <main className="mx-auto max-w-6xl px-6 py-10">
         <form
           onSubmit={createBoard}
-          className="mb-12 flex flex-col gap-4 sm:flex-row"
+          className="mb-10 flex flex-col gap-3 sm:flex-row"
         >
           <Input
             placeholder={t("newMoodscapePlaceholder")}
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="h-14 flex-1 rounded-full border-[rgba(61,58,54,0.08)] bg-white px-6 text-lg text-[#3d3a36] placeholder:text-[#8a7f74]/60 focus-visible:ring-[#c45d3e]"
+            className="h-12 flex-1 rounded-lg border-black/10 bg-white px-5 text-base text-black placeholder:text-black/40 focus-visible:ring-black"
           />
           <Button
             type="submit"
             disabled={creating || !newTitle.trim()}
-            className="h-14 gap-2 rounded-full bg-[#c45d3e] px-8 text-lg text-white hover:bg-[#a84d32] disabled:opacity-50 btn-warm"
+            className="h-12 gap-2 rounded-[50px] bg-black px-6 text-base text-white hover:bg-black/90 disabled:opacity-50"
           >
-            <Plus className="h-5 w-5" />
+            <Plus className="h-4 w-4" />
             {t("newEntry")}
           </Button>
         </form>
 
         {boards.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed border-[rgba(61,58,54,0.08)] bg-white/50 py-28 text-center card-warm">
-            <p className="text-xl font-medium text-[#3d3a36]">{t("noEntriesYet")}</p>
-            <p className="mt-2 text-[#8a7f74]">{t("createFirst")}</p>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 py-24 text-center">
+            <p className="text-[20px] font-normal leading-[1.4] tracking-[-0.14px] text-black">
+              {t("noEntriesYet")}
+            </p>
+            <p className="text-sm text-black/60">{t("createFirst")}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {boards.map((board) => (
               <button
                 key={board.id}
                 onClick={() => router.push(`/board/${board.id}`)}
-                className="group relative flex aspect-[4/3] flex-col items-start justify-end overflow-hidden rounded-[2rem] border border-[rgba(61,58,54,0.06)] bg-white p-8 text-left card-warm"
+                className="group relative flex aspect-[4/3] flex-col items-start justify-end overflow-hidden rounded-xl border border-black/5 bg-white p-6 text-left transition-shadow hover:shadow-lg"
                 style={{ background: board.cover_color || "#ffffff" }}
               >
-                <div className="absolute inset-0 rounded-[2rem] bg-white/0 transition-colors group-hover:bg-white/10" />
+                <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
                 <div className="relative z-10">
-                  <h3 className="text-xl font-medium text-[#3d3a36]">
+                  <h3 className="text-lg font-medium text-black">
                     {board.title}
                   </h3>
-                  <p className="mt-1 text-sm text-[#5c534b]/80">
-                    {new Date(board.created_at).toLocaleDateString(
-                      undefined,
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+                  <p className="text-xs text-black/60">
+                    {new Date(board.created_at).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </p>
                 </div>
               </button>
