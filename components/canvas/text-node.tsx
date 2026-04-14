@@ -17,19 +17,17 @@ export function TextNode({
   stageScale: number;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const [resizing, setResizing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+
   const dragStart = useRef<{ x: number; y: number; ex: number; ey: number } | null>(null);
   const resizeStart = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
   const style = element.style || {};
 
   // Sync content from props only when NOT actively editing.
-  // We use a ref for isEditing so the effect only re-runs when element.content
-  // actually changes (e.g. from realtime or initial mount), not on every
-  // isEditing toggle. This prevents React from clobbering the DOM with stale
-  // props right after the user finishes typing.
   const isEditingRef = useRef(isEditing);
   isEditingRef.current = isEditing;
 
@@ -39,25 +37,35 @@ export function TextNode({
     }
   }, [element.content]);
 
+  // Drag + Resize — update DOM directly for 60fps performance, save to DB only on mouseup
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
-      if (dragging && dragStart.current) {
+      if (isDragging && dragStart.current && wrapperRef.current) {
         const dx = (e.clientX - dragStart.current.x) / stageScale;
         const dy = (e.clientY - dragStart.current.y) / stageScale;
-        onUpdate({ x: dragStart.current.ex + dx, y: dragStart.current.ey + dy });
+        wrapperRef.current.style.left = `${dragStart.current.ex + dx}px`;
+        wrapperRef.current.style.top = `${dragStart.current.ey + dy}px`;
       }
-      if (resizing && resizeStart.current) {
+      if (isResizing && resizeStart.current && wrapperRef.current) {
         const dw = (e.clientX - resizeStart.current.x) / stageScale;
         const dh = (e.clientY - resizeStart.current.y) / stageScale;
-        onUpdate({
-          width: Math.max(100, resizeStart.current.w + dw),
-          height: Math.max(40, resizeStart.current.h + dh),
-        });
+        wrapperRef.current.style.width = `${Math.max(100, resizeStart.current.w + dw)}px`;
+        wrapperRef.current.style.height = `${Math.max(40, resizeStart.current.h + dh)}px`;
       }
     }
     function onMouseUp() {
-      setDragging(false);
-      setResizing(false);
+      if (isDragging && dragStart.current && wrapperRef.current) {
+        const finalX = parseFloat(wrapperRef.current.style.left);
+        const finalY = parseFloat(wrapperRef.current.style.top);
+        onUpdate({ x: finalX, y: finalY });
+      }
+      if (isResizing && resizeStart.current && wrapperRef.current) {
+        const finalW = parseFloat(wrapperRef.current.style.width);
+        const finalH = parseFloat(wrapperRef.current.style.height);
+        onUpdate({ width: finalW, height: finalH });
+      }
+      setIsDragging(false);
+      setIsResizing(false);
       dragStart.current = null;
       resizeStart.current = null;
     }
@@ -67,19 +75,19 @@ export function TextNode({
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [dragging, resizing, stageScale, onUpdate]);
+  }, [isDragging, isResizing, stageScale, onUpdate]);
 
   function startDrag(e: React.MouseEvent) {
     if (isEditing) return;
     e.stopPropagation();
-    setDragging(true);
+    setIsDragging(true);
     dragStart.current = { x: e.clientX, y: e.clientY, ex: element.x, ey: element.y };
   }
 
   function startResize(e: React.MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
-    setResizing(true);
+    setIsResizing(true);
     resizeStart.current = { x: e.clientX, y: e.clientY, w: element.width, h: element.height };
   }
 
@@ -93,7 +101,6 @@ export function TextNode({
   function handleDoubleClick(e: React.MouseEvent) {
     e.stopPropagation();
     setIsEditing(true);
-    // Select all text for easy editing
     requestAnimationFrame(() => {
       const range = document.createRange();
       const sel = window.getSelection();
@@ -107,6 +114,7 @@ export function TextNode({
 
   return (
     <div
+      ref={wrapperRef}
       className={`canvas-element absolute ${isSelected ? "selected" : ""}`}
       style={{
         left: element.x,
@@ -136,7 +144,7 @@ export function TextNode({
           opacity: style.opacity ?? 1,
           background: style.background || "transparent",
           lineHeight: 1.3,
-          cursor: isEditing ? "text" : dragging ? "grabbing" : "grab",
+          cursor: isEditing ? "text" : isDragging ? "grabbing" : "grab",
           whiteSpace: "pre-wrap",
           wordBreak: "break-word",
         }}

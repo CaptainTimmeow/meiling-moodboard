@@ -16,30 +16,40 @@ export function ImageNode({
   onUpdate: (updates: Partial<CanvasElement>) => void;
   stageScale: number;
 }) {
-  const [dragging, setDragging] = useState(false);
-  const [resizing, setResizing] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const dragStart = useRef<{ x: number; y: number; ex: number; ey: number } | null>(null);
   const resizeStart = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
-      if (dragging && dragStart.current) {
+      if (isDragging && dragStart.current && wrapperRef.current) {
         const dx = (e.clientX - dragStart.current.x) / stageScale;
         const dy = (e.clientY - dragStart.current.y) / stageScale;
-        onUpdate({ x: dragStart.current.ex + dx, y: dragStart.current.ey + dy });
+        wrapperRef.current.style.left = `${dragStart.current.ex + dx}px`;
+        wrapperRef.current.style.top = `${dragStart.current.ey + dy}px`;
       }
-      if (resizing && resizeStart.current) {
+      if (isResizing && resizeStart.current && wrapperRef.current) {
         const dw = (e.clientX - resizeStart.current.x) / stageScale;
         const dh = (e.clientY - resizeStart.current.y) / stageScale;
-        onUpdate({
-          width: Math.max(80, resizeStart.current.w + dw),
-          height: Math.max(80, resizeStart.current.h + dh),
-        });
+        wrapperRef.current.style.width = `${Math.max(80, resizeStart.current.w + dw)}px`;
+        wrapperRef.current.style.height = `${Math.max(80, resizeStart.current.h + dh)}px`;
       }
     }
     function onMouseUp() {
-      setDragging(false);
-      setResizing(false);
+      if (isDragging && dragStart.current && wrapperRef.current) {
+        const finalX = parseFloat(wrapperRef.current.style.left);
+        const finalY = parseFloat(wrapperRef.current.style.top);
+        onUpdate({ x: finalX, y: finalY });
+      }
+      if (isResizing && resizeStart.current && wrapperRef.current) {
+        const finalW = parseFloat(wrapperRef.current.style.width);
+        const finalH = parseFloat(wrapperRef.current.style.height);
+        onUpdate({ width: finalW, height: finalH });
+      }
+      setIsDragging(false);
+      setIsResizing(false);
       dragStart.current = null;
       resizeStart.current = null;
     }
@@ -49,23 +59,24 @@ export function ImageNode({
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [dragging, resizing, stageScale, onUpdate]);
+  }, [isDragging, isResizing, stageScale, onUpdate]);
 
   function startDrag(e: React.MouseEvent) {
     e.stopPropagation();
-    setDragging(true);
+    setIsDragging(true);
     dragStart.current = { x: e.clientX, y: e.clientY, ex: element.x, ey: element.y };
   }
 
   function startResize(e: React.MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
-    setResizing(true);
+    setIsResizing(true);
     resizeStart.current = { x: e.clientX, y: e.clientY, w: element.width, h: element.height };
   }
 
   return (
     <div
+      ref={wrapperRef}
       className={`canvas-element absolute ${isSelected ? "selected" : ""}`}
       style={{
         left: element.x,

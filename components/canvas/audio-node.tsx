@@ -19,8 +19,9 @@ export function AudioNode({
   stageScale: number;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [dragging, setDragging] = useState(false);
-  const [resizing, setResizing] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [playing, setPlaying] = useState(false);
   const { t } = useI18n();
   const dragStart = useRef<{ x: number; y: number; ex: number; ey: number } | null>(null);
@@ -28,23 +29,32 @@ export function AudioNode({
 
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
-      if (dragging && dragStart.current) {
+      if (isDragging && dragStart.current && wrapperRef.current) {
         const dx = (e.clientX - dragStart.current.x) / stageScale;
         const dy = (e.clientY - dragStart.current.y) / stageScale;
-        onUpdate({ x: dragStart.current.ex + dx, y: dragStart.current.ey + dy });
+        wrapperRef.current.style.left = `${dragStart.current.ex + dx}px`;
+        wrapperRef.current.style.top = `${dragStart.current.ey + dy}px`;
       }
-      if (resizing && resizeStart.current) {
+      if (isResizing && resizeStart.current && wrapperRef.current) {
         const dw = (e.clientX - resizeStart.current.x) / stageScale;
         const dh = (e.clientY - resizeStart.current.y) / stageScale;
-        onUpdate({
-          width: Math.max(160, resizeStart.current.w + dw),
-          height: Math.max(64, resizeStart.current.h + dh),
-        });
+        wrapperRef.current.style.width = `${Math.max(160, resizeStart.current.w + dw)}px`;
+        wrapperRef.current.style.height = `${Math.max(64, resizeStart.current.h + dh)}px`;
       }
     }
     function onMouseUp() {
-      setDragging(false);
-      setResizing(false);
+      if (isDragging && dragStart.current && wrapperRef.current) {
+        const finalX = parseFloat(wrapperRef.current.style.left);
+        const finalY = parseFloat(wrapperRef.current.style.top);
+        onUpdate({ x: finalX, y: finalY });
+      }
+      if (isResizing && resizeStart.current && wrapperRef.current) {
+        const finalW = parseFloat(wrapperRef.current.style.width);
+        const finalH = parseFloat(wrapperRef.current.style.height);
+        onUpdate({ width: finalW, height: finalH });
+      }
+      setIsDragging(false);
+      setIsResizing(false);
       dragStart.current = null;
       resizeStart.current = null;
     }
@@ -54,19 +64,19 @@ export function AudioNode({
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [dragging, resizing, stageScale, onUpdate]);
+  }, [isDragging, isResizing, stageScale, onUpdate]);
 
   function startDrag(e: React.MouseEvent) {
     if ((e.target as HTMLElement).closest("button")) return;
     e.stopPropagation();
-    setDragging(true);
+    setIsDragging(true);
     dragStart.current = { x: e.clientX, y: e.clientY, ex: element.x, ey: element.y };
   }
 
   function startResize(e: React.MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
-    setResizing(true);
+    setIsResizing(true);
     resizeStart.current = { x: e.clientX, y: e.clientY, w: element.width, h: element.height };
   }
 
@@ -82,6 +92,7 @@ export function AudioNode({
 
   return (
     <div
+      ref={wrapperRef}
       className={`canvas-element absolute ${isSelected ? "selected" : ""}`}
       style={{
         left: element.x,
@@ -100,9 +111,9 @@ export function AudioNode({
       <div className="flex h-full w-full items-center gap-3 rounded-xl border border-black/10 bg-white px-3 shadow-sm">
         <button
           onClick={togglePlay}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[50%] bg-black text-white hover:bg-black/90"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white hover:bg-black/90"
         >
-          {playing ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
         </button>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-black">
