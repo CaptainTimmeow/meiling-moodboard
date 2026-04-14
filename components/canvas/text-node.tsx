@@ -25,6 +25,13 @@ export function TextNode({
 
   const style = element.style || {};
 
+  // Sync content from props when NOT editing
+  useEffect(() => {
+    if (!isEditing && nodeRef.current) {
+      nodeRef.current.innerText = element.content || "";
+    }
+  }, [element.content, isEditing]);
+
   useEffect(() => {
     function onMouseMove(e: MouseEvent) {
       if (dragging && dragStart.current) {
@@ -69,9 +76,29 @@ export function TextNode({
     resizeStart.current = { x: e.clientX, y: e.clientY, w: element.width, h: element.height };
   }
 
+  function handleBlur() {
+    setIsEditing(false);
+    if (nodeRef.current) {
+      onUpdate({ content: nodeRef.current.innerText });
+    }
+  }
+
+  function handleDoubleClick() {
+    setIsEditing(true);
+    // Select all text for easy editing
+    setTimeout(() => {
+      const range = document.createRange();
+      const sel = window.getSelection();
+      if (nodeRef.current && sel) {
+        range.selectNodeContents(nodeRef.current);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }, 0);
+  }
+
   return (
     <div
-      ref={nodeRef}
       className={`canvas-element absolute ${isSelected ? "selected" : ""}`}
       style={{
         left: element.x,
@@ -88,11 +115,11 @@ export function TextNode({
       }}
     >
       <div
+        ref={nodeRef}
         contentEditable={isEditing}
         suppressContentEditableWarning
-        onDoubleClick={() => setIsEditing(true)}
-        onBlur={() => setIsEditing(false)}
-        onInput={(e) => onUpdate({ content: e.currentTarget.innerText })}
+        onDoubleClick={handleDoubleClick}
+        onBlur={handleBlur}
         className="h-full w-full overflow-hidden px-3 py-2 outline-none"
         style={{
           fontSize: style.fontSize || 24,
@@ -105,9 +132,7 @@ export function TextNode({
           whiteSpace: "pre-wrap",
           wordBreak: "break-word",
         }}
-      >
-        {element.content || ""}
-      </div>
+      />
 
       {isSelected && !isEditing && (
         <div
