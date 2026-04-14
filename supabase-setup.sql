@@ -115,9 +115,15 @@ create or replace trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 
 -- 9. Enable Realtime for elements
-begin;
-  -- Remove the table from the publication if it exists
-  alter publication supabase_realtime drop table public.elements;
-  -- Add it back
-  alter publication supabase_realtime add table public.elements;
-commit;
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'elements'
+  ) then
+    alter publication supabase_realtime add table public.elements;
+  end if;
+end;
+$$;

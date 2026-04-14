@@ -1,42 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export function AuthForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
+  const router = useRouter();
+  const [words, setWords] = useState(["", "", ""]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const supabase = createClient();
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setMessage(null);
+    setError(null);
 
-    if (isSignUp) {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${location.origin}/auth/callback`,
-        },
-      });
-      if (error) setMessage(error.message);
-      else setMessage("Check your email for the confirmation link!");
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ w1: words[0], w2: words[1], w3: words[2] }),
+    });
+
+    if (res.ok) {
+      router.push("/");
+      router.refresh();
     } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) setMessage(error.message);
+      setError("Those words don't match. Try again.");
     }
-
     setLoading(false);
   }
 
@@ -47,69 +38,39 @@ export function AuthForm() {
     >
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-medium tracking-tight text-black">
-          {isSignUp ? "Create account" : "Welcome back"}
+          Meiling&apos;s Mood Board
         </h1>
         <p className="text-sm text-black/60">
-          {isSignUp
-            ? "Sign up to start creating mood boards"
-            : "Sign in to continue to your boards"}
+          Enter your favorite 3 words to get in
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-black">
-            Email
-          </Label>
+      <div className="flex gap-2">
+        {[0, 1, 2].map((i) => (
           <Input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            key={i}
+            value={words[i]}
+            onChange={(e) => {
+              const next = [...words];
+              next[i] = e.target.value;
+              setWords(next);
+            }}
+            placeholder={`Word ${i + 1}`}
             required
-            className="h-11 rounded-lg border-black/10 bg-white text-black placeholder:text-black/40 focus-visible:ring-black"
+            className="h-12 flex-1 rounded-lg border-black/10 bg-white text-center text-black placeholder:text-black/40 focus-visible:ring-black"
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-black">
-            Password
-          </Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="h-11 rounded-lg border-black/10 bg-white text-black placeholder:text-black/40 focus-visible:ring-black"
-          />
-        </div>
+        ))}
       </div>
 
       <Button
         type="submit"
-        disabled={loading}
-        className="h-11 w-full rounded-full bg-black text-white hover:bg-black/90 disabled:opacity-50"
+        disabled={loading || words.some((w) => !w.trim())}
+        className="h-12 w-full rounded-full bg-black text-white hover:bg-black/90 disabled:opacity-50"
       >
-        {loading ? "Loading..." : isSignUp ? "Sign up" : "Sign in"}
+        {loading ? "Opening..." : "Enter"}
       </Button>
 
-      <div className="text-center">
-        <button
-          type="button"
-          onClick={() => setIsSignUp(!isSignUp)}
-          className="text-sm text-black/60 underline underline-offset-4 hover:text-black"
-        >
-          {isSignUp
-            ? "Already have an account? Sign in"
-            : "Don't have an account? Sign up"}
-        </button>
-      </div>
-
-      {message && (
-        <p className="text-center text-sm text-black/80">{message}</p>
-      )}
+      {error && <p className="text-center text-sm text-red-600">{error}</p>}
     </form>
   );
 }

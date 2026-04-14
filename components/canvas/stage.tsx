@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { Board, CanvasElement, Profile } from "@/types";
+import type { Board, CanvasElement } from "@/types";
 import { TextNode } from "./text-node";
 import { ImageNode } from "./image-node";
 import { AudioNode } from "./audio-node";
@@ -22,8 +22,6 @@ export function CanvasStage({
   selectedId,
   setSelectedId,
   updateElement,
-  userId,
-  profile,
 }: {
   board: Board;
   elements: CanvasElement[];
@@ -31,8 +29,6 @@ export function CanvasStage({
   selectedId: string | null;
   setSelectedId: (id: string | null) => void;
   updateElement: (id: string, updates: Partial<CanvasElement>) => Promise<void>;
-  userId: string;
-  profile: Profile;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState<StageState>({ x: 0, y: 0, scale: 1 });
@@ -41,7 +37,7 @@ export function CanvasStage({
 
   // Realtime hooks
   useRealtime(board.id, setElements);
-  const { cursors, broadcastCursor } = usePresence(board.id, userId, profile);
+  const { cursors, broadcastCursor } = usePresence(board.id);
 
   // Pan handlers
   const onWheel = useCallback(

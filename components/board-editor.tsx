@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Board, CanvasElement, Profile } from "@/types";
+import type { Board, CanvasElement } from "@/types";
 import { CanvasStage } from "@/components/canvas/stage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import {
   Trash2,
   ArrowLeft,
   Palette,
-  Download,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -26,13 +25,9 @@ import {
 export function BoardEditor({
   board,
   initialElements,
-  userId,
-  profile,
 }: {
   board: Board;
   initialElements: CanvasElement[];
-  userId: string;
-  profile: Profile;
 }) {
   const router = useRouter();
   const supabase = createClient();
@@ -243,8 +238,6 @@ export function BoardEditor({
           selectedId={selectedId}
           setSelectedId={setSelectedId}
           updateElement={updateElement}
-          userId={userId}
-          profile={profile}
         />
       </div>
 

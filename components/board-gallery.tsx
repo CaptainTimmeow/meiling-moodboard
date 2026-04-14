@@ -11,12 +11,8 @@ import { Plus } from "lucide-react";
 
 export function BoardGallery({
   boards: initialBoards,
-  userId,
-  displayName,
 }: {
   boards: Board[];
-  userId: string;
-  displayName: string;
 }) {
   const router = useRouter();
   const supabase = createClient();
@@ -34,7 +30,6 @@ export function BoardGallery({
       .insert({
         title: newTitle.trim(),
         cover_color: generateSoftColor(),
-        created_by: userId,
       })
       .select()
       .single();
@@ -67,7 +62,7 @@ export function BoardGallery({
           <h1 className="text-xl font-medium tracking-tight text-black">
             Mood Board
           </h1>
-          <p className="text-sm text-black/60">For {displayName}</p>
+          <p className="text-sm text-black/60">A shared space</p>
         </div>
         <SignOutButton />
       </header>
