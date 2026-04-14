@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mood Board
 
-## Getting Started
+A shared, real-time mood board webapp for creating immersive daily moodscapes together. Each entry is an infinite canvas where you can place text, images, GIFs, and audio — and see each other’s cursors live.
 
-First, run the development server:
+## Features
+
+- **Infinite Canvas** — Pan, zoom, and arrange free-form elements
+- **Text, Image, GIF, Audio** — Drag, resize, and style everything
+- **Real-time Collaboration** — See live cursors and instant updates
+- **Multiple Entries** — Create as many moodscapes as you want
+- **Figma-inspired Design** — Clean black-and-white UI with soft gradient backgrounds
+
+## Tech Stack
+
+- Next.js 16 + React + TypeScript
+- Tailwind CSS + shadcn/ui
+- Supabase (Auth, Postgres, Realtime, Storage)
+- Hosted free on Vercel
+
+## Local Setup
+
+### 1. Create a Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. Once created, go to **Project Settings > API** and copy:
+   - `Project URL`
+   - `Project API anon key`
+
+### 2. Run the database setup
+
+In your Supabase dashboard, open the **SQL Editor > New query**, paste the entire contents of `supabase-setup.sql`, and click **Run**.
+
+This creates:
+- `profiles`, `boards`, `elements` tables
+- Row Level Security policies
+- Auto-profile creation on signup
+- Realtime enabled for elements
+
+### 3. Create the storage bucket
+
+1. In Supabase dashboard, go to **Storage > New bucket**
+2. Name it `media`
+3. Set it to **Public**
+4. Under **Policies**, add a policy:
+   - Name: `Allow public uploads`
+   - Allowed operation: `INSERT` (or `ALL` for simplicity)
+   - Target roles: `authenticated`
+   - Policy definition: `true`
+
+### 4. Add environment variables
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fill in your Supabase credentials:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5. Install and run locally
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) and sign up with email/password.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push this project to GitHub
+2. Go to [vercel.com](https://vercel.com), import the repo
+3. In **Environment Variables**, add:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Click **Deploy**
 
-## Deploy on Vercel
+## How to Use
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Sign up / Log in** on the landing page
+2. **Create a new entry** from the gallery
+3. **Add elements** using the toolbar:
+   - **Text** — Double-click to edit inline
+   - **Image** — Upload any image or GIF
+   - **Audio** — Upload MP3 or WAV files
+4. **Drag** to move, **resize** from the bottom-right handle
+5. **Pan** the canvas by holding `Shift` + drag (or middle-mouse drag)
+6. **Zoom** with `Ctrl/Cmd` + scroll, or use the zoom control
+7. **Change background** from the toolbar to set the mood
+8. **Watch live cursors** when someone else joins the same board
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Customizing the Design
+
+The UI follows a Figma-inspired black-and-white aesthetic defined in `DESIGN.md`. Feel free to tweak colors, typography, and spacing in `app/globals.css`.
+
+## Troubleshooting
+
+- **Realtime not working?** Make sure you ran the SQL setup script to enable realtime on the `elements` table.
+- **Images not uploading?** Check that the `media` bucket exists and is public with upload policies.
+- **Build errors about missing Supabase URL?** Make sure `.env.local` exists with the correct keys before running `npm run build`.
