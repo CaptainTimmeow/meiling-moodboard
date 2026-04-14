@@ -121,6 +121,14 @@ export function CanvasStage({
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
     >
+      {/* Dot grid overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 canvas-dots opacity-60"
+        style={{
+          transform: `translate(${stage.x % 24}px, ${stage.y % 24}px)`,
+        }}
+      />
+
       <div
         className="absolute left-0 top-0 origin-top-left will-change-transform"
         style={{
@@ -145,7 +153,7 @@ export function CanvasStage({
         </div>
       </div>
 
-      {/* Zoom controls — clean white pill strip */}
+      {/* Zoom controls */}
       <div className="absolute bottom-4 right-4 flex items-center gap-1 rounded-[50px] border border-black/10 bg-white/95 px-2 py-1.5 text-sm text-black shadow-sm backdrop-blur-sm">
         <button
           onClick={() => setStage((s) => ({ ...s, scale: Math.max(s.scale * 0.9, 0.2) }))}

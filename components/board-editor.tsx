@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Type,
   Image as ImageIcon,
   Music,
@@ -136,110 +141,115 @@ export function BoardEditor({
     await supabase.from("boards").update({ cover_color: color }).eq("id", board.id);
   }
 
+  const toolButton = (
+    icon: React.ReactNode,
+    label: string,
+    onClick: () => void,
+    disabled?: boolean
+  ) => (
+    <Tooltip>
+      <TooltipTrigger>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onClick}
+          disabled={disabled}
+          className="h-9 w-9 rounded-[50%] border-black/10 bg-white text-black hover:bg-black/[0.08]"
+        >
+          {icon}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        className="rounded-[50px] border-black/10 bg-black px-3 py-1 text-xs text-white"
+      >
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  );
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-white">
-      {/* Header — clean white strip with black text, pill/circular buttons only */}
-      <header className="flex items-center gap-3 border-b border-black/5 bg-white px-4 py-3">
+      {/* Header */}
+      <header className="flex items-center gap-3 border-b border-black/5 bg-white px-5 py-3">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push("/")}
           aria-label={t("back")}
-          className="h-10 w-10 rounded-[50%] text-black hover:bg-black/[0.08]"
+          className="h-9 w-9 rounded-[50%] text-black hover:bg-black/[0.08]"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </Button>
 
         <Input
           value={boardTitle}
           onChange={(e) => updateTitle(e.target.value)}
-          className="h-9 w-auto min-w-[10rem] border-none bg-transparent text-[20px] font-normal text-black focus-visible:ring-0"
+          className="h-9 w-auto min-w-[8rem] border-none bg-transparent text-[18px] font-normal text-black focus-visible:ring-0"
         />
 
         <div className="flex-1" />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <LanguageSwitcher />
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={addText}
-            disabled={uploading}
-            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
-          >
-            <Type className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("text")}</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
-          >
-            <ImageIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("image")}</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => audioInputRef.current?.click()}
-            disabled={uploading}
-            className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
-          >
-            <Music className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("audio")}</span>
-          </Button>
+          {toolButton(<Type className="h-4 w-4" />, t("text"), addText, uploading)}
+          {toolButton(
+            <ImageIcon className="h-4 w-4" />,
+            t("image"),
+            () => fileInputRef.current?.click(),
+            uploading
+          )}
+          {toolButton(
+            <Music className="h-4 w-4" />,
+            t("audio"),
+            () => audioInputRef.current?.click(),
+            uploading
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
                 variant="outline"
-                size="sm"
-                className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
+                size="icon"
+                className="h-9 w-9 rounded-[50%] border-black/10 bg-white text-black hover:bg-black/[0.08]"
               >
                 <Palette className="h-4 w-4" />
-                <span className="hidden sm:inline">{t("background")}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-xl border-black/10 bg-white">
+            <DropdownMenuContent
+              align="end"
+              className="rounded-[8px] border-black/10 bg-white"
+            >
               {[
                 { value: "#ffffff", label: t("white") },
-                { value: "linear-gradient(135deg, #a8e063 0%, #f4d03f 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #f4d03f 0%, #9b59b6 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #9b59b6 0%, #e91e63 100%)", label: t("gradient") },
-                { value: "linear-gradient(135deg, #e91e63 0%, #ff9800 100%)", label: t("gradient") },
-                { value: "#000000", label: t("dark") },
+                { value: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)", label: t("gradient") },
+                { value: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)", label: t("gradient") },
+                { value: "#0f0f0f", label: t("dark") },
               ].map((c, idx) => (
                 <DropdownMenuItem
                   key={idx}
                   onClick={() => updateCover(c.value)}
-                  className="gap-2 rounded-lg text-black focus:bg-black/5 focus:text-black"
+                  className="gap-3 rounded-[6px] text-black focus:bg-black/5 focus:text-black"
                 >
                   <span
                     className="inline-block h-4 w-4 rounded-full border border-black/10"
                     style={{ background: c.value }}
                   />
-                  <span>{c.label}</span>
+                  <span className="text-sm">{c.label}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {selectedId && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => deleteElement(selectedId)}
-              className="gap-2 rounded-[50px] border-black/10 bg-white px-4 text-black hover:bg-black/[0.08]"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">{t("delete")}</span>
-            </Button>
-          )}
+          {selectedId &&
+            toolButton(
+              <Trash2 className="h-4 w-4" />,
+              t("delete"),
+              () => deleteElement(selectedId)
+            )}
         </div>
       </header>
 
