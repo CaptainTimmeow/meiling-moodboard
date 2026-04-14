@@ -93,14 +93,14 @@ export function TextNode({
         onDoubleClick={() => setIsEditing(true)}
         onBlur={() => setIsEditing(false)}
         onInput={(e) => onUpdate({ content: e.currentTarget.innerText })}
-        className="h-full w-full overflow-hidden px-3 py-2 outline-none"
+        className="h-full w-full overflow-hidden rounded-2xl px-4 py-3 outline-none"
         style={{
           fontSize: style.fontSize || 24,
-          color: style.color || "#000000",
+          color: style.color || "#3d3a36",
           fontWeight: style.fontWeight || 400,
           opacity: style.opacity ?? 1,
           background: style.background || "transparent",
-          lineHeight: 1.3,
+          lineHeight: 1.4,
           cursor: isEditing ? "text" : dragging ? "grabbing" : "grab",
           whiteSpace: "pre-wrap",
           wordBreak: "break-word",
@@ -111,12 +111,14 @@ export function TextNode({
 
       {isSelected && !isEditing && (
         <div
-          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-5 w-5 cursor-se-resize"
           onMouseDown={startResize}
           style={{
-            background: "#000",
-            transform: "translate(50%, 50%)",
+            background: "#c45d3e",
+            transform: "translate(40%, 40%)",
             borderRadius: "50%",
+            border: "2px solid white",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
           }}
         />
       )}

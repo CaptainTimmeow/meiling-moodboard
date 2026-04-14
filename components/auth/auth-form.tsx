@@ -4,9 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n";
+import { Sparkles } from "lucide-react";
 
 export function AuthForm() {
   const router = useRouter();
+  const { t } = useI18n();
   const [words, setWords] = useState(["", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,51 +29,56 @@ export function AuthForm() {
       router.push("/");
       router.refresh();
     } else {
-      setError("Those words don't match. Try again.");
+      setError(t("errorWrongWords"));
     }
     setLoading(false);
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-sm space-y-6 rounded-2xl bg-white p-8 shadow-sm border border-black/5"
-    >
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-medium tracking-tight text-black">
-          Meiling&apos;s Mood Board
-        </h1>
-        <p className="text-sm text-black/60">
-          Enter your favorite 3 words to get in
-        </p>
-      </div>
-
-      <div className="flex gap-2">
-        {[0, 1, 2].map((i) => (
-          <Input
-            key={i}
-            value={words[i]}
-            onChange={(e) => {
-              const next = [...words];
-              next[i] = e.target.value;
-              setWords(next);
-            }}
-            placeholder={`Word ${i + 1}`}
-            required
-            className="h-12 flex-1 rounded-lg border-black/10 bg-white text-center text-black placeholder:text-black/40 focus-visible:ring-black"
-          />
-        ))}
-      </div>
-
-      <Button
-        type="submit"
-        disabled={loading || words.some((w) => !w.trim())}
-        className="h-12 w-full rounded-full bg-black text-white hover:bg-black/90 disabled:opacity-50"
+    <div className="relative w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        className="relative space-y-8 rounded-[2.5rem] bg-white p-10 card-warm"
       >
-        {loading ? "Opening..." : "Enter"}
-      </Button>
+        <div className="space-y-3 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f3ebe4] text-[#c45d3e]">
+            <Sparkles className="h-6 w-6" />
+          </div>
+          <h1 className="text-3xl font-medium tracking-tight text-[#3d3a36]">
+            {t("title")}
+          </h1>
+          <p className="text-[#8a7f74]">{t("subtitle")}</p>
+        </div>
 
-      {error && <p className="text-center text-sm text-red-600">{error}</p>}
-    </form>
+        <div className="flex gap-3">
+          {[0, 1, 2].map((i) => (
+            <Input
+              key={i}
+              value={words[i]}
+              onChange={(e) => {
+                const next = [...words];
+                next[i] = e.target.value;
+                setWords(next);
+              }}
+              placeholder={t(`word${(i + 1) as 1 | 2 | 3}`)}
+              required
+              className="h-14 flex-1 rounded-2xl border-[rgba(61,58,54,0.08)] bg-[#faf8f5] text-center text-lg text-[#3d3a36] placeholder:text-[#8a7f74]/60 focus-visible:ring-[#c45d3e] focus-visible:ring-2"
+            />
+          ))}
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading || words.some((w) => !w.trim())}
+          className="h-14 w-full rounded-full bg-[#c45d3e] text-lg text-white hover:bg-[#a84d32] disabled:opacity-50 btn-warm"
+        >
+          {loading ? t("opening") : t("enter")}
+        </Button>
+
+        {error && (
+          <p className="text-center text-sm text-[#c45d3e]">{error}</p>
+        )}
+      </form>
+    </div>
   );
 }

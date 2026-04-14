@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -49,38 +49,39 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  /* Warm human palette */
+  --background: #faf8f5;
+  --foreground: #3d3a36;
   --card: #ffffff;
-  --card-foreground: #000000;
+  --card-foreground: #3d3a36;
   --popover: #ffffff;
-  --popover-foreground: #000000;
-  --primary: #000000;
+  --popover-foreground: #3d3a36;
+  --primary: #c45d3e;
   --primary-foreground: #ffffff;
-  --secondary: rgba(0, 0, 0, 0.08);
-  --secondary-foreground: #000000;
-  --muted: #f5f5f5;
-  --muted-foreground: #666666;
-  --accent: #f5f5f5;
-  --accent-foreground: #000000;
-  --destructive: #ff0000;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: rgba(0, 0, 0, 0.1);
-  --ring: #000000;
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.5rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #000000;
+  --secondary: #f3ebe4;
+  --secondary-foreground: #5c534b;
+  --muted: #f3ebe4;
+  --muted-foreground: #8a7f74;
+  --accent: #e8f3e8;
+  --accent-foreground: #4a5d4a;
+  --destructive: #c45d3e;
+  --border: rgba(61, 58, 54, 0.08);
+  --input: rgba(61, 58, 54, 0.08);
+  --ring: #c45d3e;
+  --chart-1: #c45d3e;
+  --chart-2: #5b8a5b;
+  --chart-3: #d4a03a;
+  --chart-4: #7a6fa8;
+  --chart-5: #5c8fa8;
+  --radius: 1rem;
+  --sidebar: #faf8f5;
+  --sidebar-foreground: #3d3a36;
+  --sidebar-primary: #c45d3e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f5f5;
-  --sidebar-accent-foreground: #000000;
-  --sidebar-border: rgba(0, 0, 0, 0.1);
-  --sidebar-ring: #000000;
+  --sidebar-accent: #f3ebe4;
+  --sidebar-accent-foreground: #5c534b;
+  --sidebar-border: rgba(61, 58, 54, 0.08);
+  --sidebar-ring: #c45d3e;
 }
 
 @layer base {
@@ -96,46 +97,82 @@
   }
 }
 
-/* Figma-inspired focus rings */
+/* Soft focus rings */
 *:focus-visible {
-  outline: 2px dashed #000000;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - warm tones */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+  background: rgba(196, 93, 62, 0.25);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(196, 93, 62, 0.4);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
-/* Canvas selection handles */
+/* Canvas selection handles - organic warm */
 .canvas-element.selected::after {
   content: "";
   position: absolute;
-  inset: -2px;
-  border: 2px dashed #000000;
+  inset: -3px;
+  border: 2px solid var(--primary);
+  border-radius: 14px;
   pointer-events: none;
   z-index: 9999;
 }
 
-/* Hero gradient */
+/* Subtle paper grain overlay */
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Gentle hero gradient */
 .hero-gradient {
   background: linear-gradient(
     135deg,
-    #a8e063 0%,
-    #f4d03f 25%,
-    #9b59b6 50%,
-    #e91e63 75%,
-    #ff9800 100%
+    #f9e4c9 0%,
+    #f5d6c6 25%,
+    #e8d5e8 50%,
+    #d4e8d4 75%,
+    #c9e4e8 100%
   );
+}
+
+/* Warm button hover glow */
+.btn-warm {
+  transition: all 0.2s ease;
+}
+.btn-warm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(196, 93, 62, 0.2);
+}
+
+/* Floating card shadow */
+.card-warm {
+  box-shadow: 0 2px 8px rgba(92, 83, 75, 0.06),
+    0 8px 24px rgba(92, 83, 75, 0.04);
+  transition: all 0.25s ease;
+}
+.card-warm:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(92, 83, 75, 0.1),
+    0 16px 40px rgba(92, 83, 75, 0.06);
 }

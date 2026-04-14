@@ -85,17 +85,19 @@ export function ImageNode({
         src={element.url || ""}
         alt={element.content || ""}
         draggable={false}
-        className="h-full w-full rounded-lg object-cover"
+        className="h-full w-full rounded-2xl object-cover"
         style={{ opacity: element.style?.opacity ?? 1 }}
       />
       {isSelected && (
         <div
-          className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+          className="absolute bottom-0 right-0 h-5 w-5 cursor-se-resize"
           onMouseDown={startResize}
           style={{
-            background: "#000",
-            transform: "translate(50%, 50%)",
+            background: "#c45d3e",
+            transform: "translate(40%, 40%)",
             borderRadius: "50%",
+            border: "2px solid white",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
           }}
         />
       )}
