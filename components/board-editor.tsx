@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useI18n } from "@/lib/i18n";
+import { AiChat } from "@/components/ai-chat";
 
 export function BoardEditor({
   board,
@@ -263,6 +264,7 @@ export function BoardEditor({
           setSelectedId={setSelectedId}
           updateElement={updateElement}
         />
+        <AiChat elements={elements} />
       </div>
 
       <input

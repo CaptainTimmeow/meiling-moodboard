@@ -38,6 +38,13 @@ const translations = {
     doubleClickEdit: "双击编辑文字",
     untitledAudio: "未命名音频",
 
+    // AI Chat
+    askMomo: "问问 Momo",
+    momoName: "Momo",
+    momoTyping: "Momo 正在思考...",
+    momoGreeting: "嗨，我是 Momo ✨\n我会陪你一起把心情变成画面。需要灵感的话，随时叫我。",
+    momoPlaceholder: "告诉 Momo 你现在的心情...",
+
     // Language
     language: "语言",
   },
@@ -73,6 +80,13 @@ const translations = {
     gradient: "Gradient",
     doubleClickEdit: "Double click to edit",
     untitledAudio: "Untitled audio",
+
+    // AI Chat
+    askMomo: "Ask Momo",
+    momoName: "Momo",
+    momoTyping: "Momo is thinking...",
+    momoGreeting: "Hi, I'm Momo ✨\nI'm here to help turn your feelings into a visual space. Just say the word.",
+    momoPlaceholder: "Tell Momo how you're feeling...",
 
     // Language
     language: "Language",
